@@ -23,7 +23,7 @@ const server = http.createServer((req, res) => {
       })
       .on('end', () => {
         body = Buffer.concat(body).toString();
-        const { firstPlayer, secondPlayer } = querystring.parse(body);
+        const { firstPlayer, secondPlayer } = JSON.parse(body);
         if (!firstPlayer || !secondPlayer) {
           res.statusCode = 400;
           res.end(JSON.stringify({ error: 'Two player names are required.' }));
@@ -65,6 +65,7 @@ const server = http.createServer((req, res) => {
     }
   }
 
+  // Patch request to draw a card from the deck
   if (req.method === 'PATCH' && pathname === '/game/draw') {
     const { id } = queryParams;
     if (!id) {
@@ -91,6 +92,24 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify(drawResult));
         break;
     }
+  }
+
+  if (req.method === 'POST' && pathname === '/game/compare') {
+    let body = [];
+    req
+      .on('error', (err) => {
+        console.error(err);
+      })
+      .on('data', (chunk) => {
+        body.push(chunk);
+      })
+      .on('end', () => {
+        body = Buffer.concat(body).toString();
+        const { cards } = JSON.parse(body);
+        const winnerCard = game.compareCards(cards);
+        res.statusCode = 200;
+        res.end(JSON.stringify({ winnerCard }));
+      });
   }
 });
 
