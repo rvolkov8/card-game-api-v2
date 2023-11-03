@@ -27,10 +27,11 @@ const server = http.createServer((req, res) => {
         if (!firstPlayer || !secondPlayer) {
           res.statusCode = 400;
           res.end(JSON.stringify({ error: 'Two player names are required.' }));
+        } else {
+          const newGame = game.createGame(firstPlayer, secondPlayer);
+          res.statusCode = 201;
+          res.end(JSON.stringify(newGame));
         }
-        const newGame = game.createGame(firstPlayer, secondPlayer);
-        res.statusCode = 201;
-        res.end(JSON.stringify(newGame));
       });
   }
 
@@ -40,6 +41,7 @@ const server = http.createServer((req, res) => {
     if (!id) {
       res.statusCode = 400;
       res.end(JSON.stringify({ error: 'Game ID is required.' }));
+      return;
     }
 
     const shuffleResult = game.shuffleDeck(id);
@@ -71,6 +73,7 @@ const server = http.createServer((req, res) => {
     if (!id) {
       res.statusCode = 400;
       res.end(JSON.stringify({ error: 'Game ID is required.' }));
+      return;
     }
 
     const drawResult = game.drawCard(id);
@@ -87,6 +90,7 @@ const server = http.createServer((req, res) => {
         res.end(
           JSON.stringify({ error: 'The deck is empty and cannot be shuffled.' })
         );
+        break;
       default:
         res.statusCode = 200;
         res.end(JSON.stringify(drawResult));
