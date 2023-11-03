@@ -25,7 +25,6 @@ class Game {
     if (gameIndex === -1) {
       return -1;
     }
-
     // The deck is empty
     if (this.#games[gameIndex].deck.count() === 0) {
       return 0;
@@ -33,6 +32,21 @@ class Game {
 
     this.#games[gameIndex].deck.shuffle();
     return 1;
+  }
+
+  drawCard(gameId) {
+    const gameIndex = this.#games.findIndex((game) => game.id === gameId);
+
+    // No game with such id
+    if (gameIndex === -1) {
+      return -1;
+    }
+    // The deck is empty
+    if (this.#games[gameIndex].deck.count() === 0) {
+      return 0;
+    }
+
+    return this.#games[gameIndex].deck.draw(1);
   }
 }
 

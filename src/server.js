@@ -64,6 +64,34 @@ const server = http.createServer((req, res) => {
         break;
     }
   }
+
+  if (req.method === 'PATCH' && pathname === '/game/draw') {
+    const { id } = queryParams;
+    if (!id) {
+      res.statusCode = 400;
+      res.end(JSON.stringify({ error: 'Game ID is required.' }));
+    }
+
+    const drawResult = game.drawCard(id);
+
+    switch (drawResult) {
+      case -1:
+        res.statusCode = 404;
+        res.end(
+          JSON.stringify({ error: `Game with ID of ${id} does not exist.` })
+        );
+        break;
+      case 0:
+        res.statusCode = 400;
+        res.end(
+          JSON.stringify({ error: 'The deck is empty and cannot be shuffled.' })
+        );
+      default:
+        res.statusCode = 200;
+        res.end(JSON.stringify(drawResult));
+        break;
+    }
+  }
 });
 
 const PORT = 3000;
