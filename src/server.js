@@ -3,9 +3,12 @@ const url = require('url');
 const Game = require('./classes/game');
 const querystring = require('querystring');
 
+const game = new Game();
+
 const server = http.createServer((req, res) => {
-  const game = new Game();
-  const { pathname } = url.parse(req.url);
+  const { pathname, query } = url.parse(req.url);
+  const queryParams = querystring.parse(query);
+
   res.setHeader('Content-Type', 'application/json');
 
   // Post request to create a new game
@@ -29,6 +32,37 @@ const server = http.createServer((req, res) => {
         res.statusCode = 201;
         res.end(JSON.stringify(newGame));
       });
+  }
+
+  // Patch request to shuffle a certain deck
+  if (req.method === 'PATCH' && pathname === '/game/shuffle') {
+    const { id } = queryParams;
+    if (!id) {
+      res.statusCode = 400;
+      res.end(JSON.stringify({ error: 'Game ID is required.' }));
+    }
+
+    const shuffleResult = game.shuffleDeck(id);
+
+    switch (shuffleResult) {
+      case -1:
+        res.statusCode = 404;
+        res.end(
+          JSON.stringify({ error: `Game with ID of ${id} does not exist.` })
+        );
+        break;
+      case 0:
+        res.statusCode = 400;
+        res.end(
+          JSON.stringify({ error: 'The deck is empty and cannot be shuffled.' })
+        );
+      case 1:
+        res.statusCode = 204;
+        res.end();
+        break;
+      default:
+        break;
+    }
   }
 });
 

@@ -8,7 +8,7 @@ class Game {
     const newDeck = new Deck();
     newDeck.shuffle();
     const newGame = {
-      id: Date.now(),
+      id: Date.now().toString(),
       deck: newDeck,
       firstPlayer,
       secondPlayer,
@@ -16,6 +16,23 @@ class Game {
     this.#games.push(newGame);
     const { deck, ...result } = newGame;
     return result;
+  }
+
+  shuffleDeck(gameId) {
+    const gameIndex = this.#games.findIndex((game) => game.id === gameId);
+
+    // No game with such id
+    if (gameIndex === -1) {
+      return -1;
+    }
+
+    // The deck is empty
+    if (this.#games[gameIndex].deck.count() === 0) {
+      return 0;
+    }
+
+    this.#games[gameIndex].deck.shuffle();
+    return 1;
   }
 }
 
