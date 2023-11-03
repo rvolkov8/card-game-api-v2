@@ -19,4 +19,4 @@ class Game {
   }
 }
 
-module.export = Game;
+module.exports = Game;
