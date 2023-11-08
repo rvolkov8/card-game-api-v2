@@ -54,7 +54,7 @@ const server = http.createServer((req, res) => {
         );
         break;
       case 0:
-        res.statusCode = 400;
+        res.statusCode = 422;
         res.end(
           JSON.stringify({ error: 'The deck is empty and cannot be shuffled.' })
         );
@@ -86,7 +86,7 @@ const server = http.createServer((req, res) => {
         );
         break;
       case 0:
-        res.statusCode = 400;
+        res.statusCode = 422;
         res.end(
           JSON.stringify({ error: 'The deck is empty and cannot be shuffled.' })
         );
