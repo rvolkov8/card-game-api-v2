@@ -33,7 +33,4 @@ class Deck {
   }
 }
 
-const deck = new Deck();
-const cards = deck.draw(53);
-
 module.exports = Deck;
