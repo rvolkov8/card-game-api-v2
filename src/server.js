@@ -62,8 +62,6 @@ const server = http.createServer((req, res) => {
         res.statusCode = 204;
         res.end();
         break;
-      default:
-        break;
     }
   }
 
