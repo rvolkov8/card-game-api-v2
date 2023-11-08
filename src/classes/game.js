@@ -1,7 +1,24 @@
 const Deck = require('./deck');
 
 class Game {
+  static cardsPower = {
+    ace: 14,
+    king: 13,
+    queen: 12,
+    jack: 11,
+    10: 10,
+    9: 9,
+    8: 8,
+    7: 7,
+    6: 6,
+    5: 5,
+    4: 4,
+    3: 3,
+    2: 2,
+  };
+
   #games = [];
+
   constructor() {}
 
   createGame(firstPlayer, secondPlayer) {
@@ -50,25 +67,9 @@ class Game {
   }
 
   compareCards(cards) {
-    const cardRanks = {
-      ace: 14,
-      king: 13,
-      queen: 12,
-      jack: 11,
-      10: 10,
-      9: 9,
-      8: 8,
-      7: 7,
-      6: 6,
-      5: 5,
-      4: 4,
-      3: 3,
-      2: 2,
-    };
-
     const winningCard = cards.reduce((currentWinner, card) =>
-      cardRanks[card.split(' ')[0].toLowerCase()] >
-      cardRanks[currentWinner.split(' ')[0].toLowerCase()]
+      Game.cardsPower[card.split(' ')[0].toLowerCase()] >
+      Game.cardsPower[currentWinner.split(' ')[0].toLowerCase()]
         ? card
         : currentWinner
     );
